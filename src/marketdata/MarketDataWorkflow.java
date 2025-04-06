@@ -82,6 +82,7 @@ public class MarketDataWorkflow {
             System.out.println(String.format("%-10s %-15s %-15s %-15s %-10s", "Symbol", "Avg Price", "Min Price", "Max Price", "Count"));
             System.out.println("---------------------------------------------------------------------");
             for (String symbol : avgPrices.keySet()) {
+                //formatting the value for the return
                 String avgStr = String.format(Locale.US, "%.2f", avgPrices.get(symbol));
                 String minStr = String.format(Locale.US, "%.2f", minPrices.get(symbol));
                 String maxStr = String.format(Locale.US, "%.2f", maxPrices.get(symbol));

@@ -11,11 +11,14 @@ public class AdvancedMarketDataModule {
     private MarketDataPreprocessor preprocessor;
     private MarketDataCleaner cleaner;
     public AdvancedMarketDataModule(){
+        //calling the cleaning and processing modules
         preprocessor = new MarketDataPreprocessor();
         cleaner = new MarketDataCleaner();
     }
     public List<MarketData> processRawData(String rawData){
+        // preprocessing the raw data from the source
         List<MarketData> list = preprocessor.preprocess(rawData);
+        //returning the cleaned data taken from the preprocesser
         return cleaner.cleanData(list);
     }
     public Map<String, List<Double>> calculateEMA(List<MarketData> data, int period){
