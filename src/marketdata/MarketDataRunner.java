@@ -61,6 +61,7 @@ public class MarketDataRunner {
     }
     
     private static void displayMenu() {
+        //display demo to show the functionality
         System.out.println("===== MARKET DATA PERSISTENCE DEMO =====");
         System.out.println("1. Process new data file and store");
         System.out.println("2. View all stored data");
@@ -147,7 +148,8 @@ public class MarketDataRunner {
             System.out.println("No data available for summary statistics.");
             return;
         }
-        
+
+        //Suneet fyp ahh code
         System.out.println("\n--- Summary Statistics ---");
         System.out.println(String.format("%-10s %-15s", "Symbol", "Avg Price"));
         System.out.println("--------------------------");
