@@ -1,7 +1,7 @@
 package marketdata;
 
 import java.util.List;
-
+// This is fine for now but going to clean up in the future most likely
 // Repository interface for persisting market data
 public interface MarketDataRepository {
     // Initialize the repository (create tables, etc.)
