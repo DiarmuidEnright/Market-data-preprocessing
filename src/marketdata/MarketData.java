@@ -1,5 +1,7 @@
 package marketdata;
 public class MarketData {
+    //this is for the general format of the incoming data and should not change
+    //need to add checking to make sure that the data matches this format in the future
     private String symbol;
     private double price;
     private long timestamp;
