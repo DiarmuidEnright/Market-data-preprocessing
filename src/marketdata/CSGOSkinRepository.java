@@ -3,11 +3,11 @@ package marketdata;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
-//random commit counter = 1
+//random commit counter = 2
 public class CSGOSkinRepository {
     private Connection connection;
     private String dbPath;
-    //setting the path
+    //setting the path to the db
     public CSGOSkinRepository(String dbPath) {
         this.dbPath = dbPath;
     }
