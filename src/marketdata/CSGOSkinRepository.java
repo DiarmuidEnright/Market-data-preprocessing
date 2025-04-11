@@ -15,6 +15,7 @@ public class CSGOSkinRepository {
     public void initialize() throws Exception {
         connection = DriverManager.getConnection("jdbc:sqlite:" + dbPath);
         //if the db is not found or it is empty then make it using the below SQL
+        // this is probably the lazy was to do this but it works for now
         try (Statement stmt = connection.createStatement()) {
             stmt.execute(
                 "CREATE TABLE IF NOT EXISTS csgo_skins (" +
@@ -45,7 +46,7 @@ public class CSGOSkinRepository {
     public void saveSkinData(CSGOSkinData skin) throws Exception {
         String sql = "INSERT OR REPLACE INTO csgo_skins (symbol, price, timestamp, weapon_type, skin_name, condition, is_stattrak, rarity, wear, float_value) " +
                     "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-        //for the user input run the metohs depending on the input as like before with the market data
+        //for the user input run the methods depending on the input as like before with the market data
         try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
             pstmt.setString(1, skin.getSymbol());
             pstmt.setDouble(2, skin.getPrice());
@@ -64,6 +65,7 @@ public class CSGOSkinRepository {
     
     public List<CSGOSkinData> getAllSkins() throws Exception {
         List<CSGOSkinData> skins = new ArrayList<>();
+        //for all of the following inputs we are going to take the input as a string which is going to be our query in SQL
         String sql = "SELECT * FROM csgo_skins ORDER BY timestamp DESC";
         
         try (Statement stmt = connection.createStatement();
@@ -79,6 +81,7 @@ public class CSGOSkinRepository {
     //init of the methods all called by the scanner input
     public List<CSGOSkinData> getSkinsByWeaponType(String weaponType) throws Exception {
         List<CSGOSkinData> skins = new ArrayList<>();
+        //same as what we had before
         String sql = "SELECT * FROM csgo_skins WHERE LOWER(weapon_type) = LOWER(?) ORDER BY timestamp DESC";
         
         try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
@@ -141,6 +144,7 @@ public class CSGOSkinRepository {
     
     private CSGOSkinData resultSetToSkinData(ResultSet rs) throws SQLException {
         return new CSGOSkinData(
+            //in cs we have they unique identifiers for the different skins that we are working with so we want to format the outputs to display what is what
             rs.getString("symbol"),
             rs.getDouble("price"),
             rs.getLong("timestamp"),
