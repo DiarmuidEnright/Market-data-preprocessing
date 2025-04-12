@@ -1,6 +1,7 @@
 package marketdata;
 
 public class CSGOSkinData extends MarketData {
+    // private defs of the different values to be defined in the db abd then returned
     private String weaponType;     // e.g., "AK-47", "M4A4", "Knife"
     private String skinName;       // e.g., "Asiimov", "Dragon Lore"
     private String condition;      // e.g., "Factory New", "Field-Tested"
@@ -13,7 +14,8 @@ public class CSGOSkinData extends MarketData {
                        String weaponType, String skinName, String condition,
                        boolean isStatTrak, String rarity, String wear,
                        double floatValue) {
-        //declaring the values
+        //declaring the values, this is super so that the values are accessable
+        // this is the same as out init
         super(symbol, price, timestamp);
         this.weaponType = weaponType;
         this.skinName = skinName;
@@ -44,6 +46,8 @@ public class CSGOSkinData extends MarketData {
 
     @Override
     public String toString() {
+        //format and then return the values as shown in the def
+        // cleanup the function calls in the future
         return String.format("%s | %s (%s) %s | Wear: %.4f | Price: $%.2f",
             weaponType,
             skinName,

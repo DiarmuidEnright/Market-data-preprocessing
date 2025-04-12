@@ -4,26 +4,30 @@ import java.util.Scanner;
 
 public class MarketSystemRunner {
     private static final Scanner scanner = new Scanner(System.in);
-
+    // scanning the main for the choice from the user as input
     public static void main(String[] args) {
         try {
             while (true) {
                 displayMainMenu();
+                // take the choice at the input here
                 int choice = getUserChoice();
                 
                 if (choice == 0) {
+                    // break if the value is not one of these
                     break;
                 }
-                
+                // run through the user choice
                 processChoice(choice);
             }
             
             System.out.println("Exiting Market System...");
             
         } catch (Exception e) {
+            // return the error if something is wrong
             System.err.println("Error: " + e.getMessage());
             e.printStackTrace();
         } finally {
+            // close the scanner
             scanner.close();
         }
     }
@@ -39,9 +43,11 @@ public class MarketSystemRunner {
     private static int getUserChoice() {
         while (scanner.hasNextLine()) {
             try {
+                // move to the next line and then trim the input
                 String input = scanner.nextLine().trim();
                 if (input.isEmpty()) {
                     displayMainMenu();
+                    // move to the next if it exists
                     continue;
                 }
                 return Integer.parseInt(input);
@@ -64,6 +70,7 @@ public class MarketSystemRunner {
                 CSGOSkinRunner.main(new String[0]);
                 break;
             default:
+                // print the error message to the user
                 System.out.println("Invalid choice. Please try again.");
         }
     }

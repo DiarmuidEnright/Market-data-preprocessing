@@ -5,11 +5,13 @@ public class MarketData {
     private String symbol;
     private double price;
     private long timestamp;
-    public MarketData(String symbol, double price, long timestamp) {
+    public MarketData(String symbol, double price, long timestamp){
+        //public def of the market data
         this.symbol = symbol;
         this.price = price;
         this.timestamp = timestamp;
     }
+    // run the functions and return what is needed if something is returned
     public String getSymbol() { return symbol; }
     public double getPrice() { return price; }
     public long getTimestamp() { return timestamp; }
