@@ -8,6 +8,7 @@ public class CSGOSkinRunner {
     private static final String DB_PATH = "marketdata.db";
     private static CSGOSkinRepository repository;
     private static Scanner scanner;
+    private static SteamAPIClient steamApiClient;
 
     public static void main(String[] args) {
         try {
@@ -15,6 +16,7 @@ public class CSGOSkinRunner {
             repository = new CSGOSkinRepository(DB_PATH);
             repository.initialize();
             scanner = new Scanner(System.in);
+            steamApiClient = new SteamAPIClient();
             
             while (true) {
                 displayMenu();
@@ -90,35 +92,64 @@ public class CSGOSkinRunner {
         System.out.println("Enter skin details:");
         
         System.out.print("Weapon Type (e.g., AK-47, M4A4): ");
-        String weaponType = scanner.nextLine();
+        String weaponType = scanner.nextLine().trim();
         
         System.out.print("Skin Name (e.g., Asiimov, Dragon Lore): ");
-        String skinName = scanner.nextLine();
+        String skinName = scanner.nextLine().trim();
         
         System.out.print("Condition (Factory New, Minimal Wear, Field-Tested, Well-Worn, Battle-Scarred): ");
-        String condition = scanner.nextLine();
+        String condition = scanner.nextLine().trim();
         
         System.out.print("Is StatTrak™? (yes/no): ");
         boolean isStatTrak = scanner.nextLine().toLowerCase().startsWith("y");
         
         System.out.print("Rarity (Consumer Grade, Industrial Grade, Mil-Spec, Restricted, Classified, Covert): ");
-        String rarity = scanner.nextLine();
+        String rarity = scanner.nextLine().trim();
         
-        System.out.print("Wear (Float Value 0-1): ");
-        double floatValue = Double.parseDouble(scanner.nextLine());
+        double floatValue = 0.0;
+        boolean validFloat = false;
+        while (!validFloat) {
+            System.out.print("Wear (Float Value 0-1): ");
+            try {
+                String floatInput = scanner.nextLine().trim();
+                floatValue = Double.parseDouble(floatInput.replace(",", ""));
+                validFloat = true;
+            } catch (NumberFormatException e) {
+                System.out.println("Invalid float value. Please enter a number between 0 and 1.");
+            }
+        }
         
-        System.out.print("Price (USD): ");
-        double price = Double.parseDouble(scanner.nextLine());
+        double price = 0.0;
+        boolean validPrice = false;
+        while (!validPrice) {
+            System.out.print("Price (USD): ");
+            try {
+                String priceInput = scanner.nextLine().trim();
+                price = Double.parseDouble(priceInput.replace(",", ""));
+                validPrice = true;
+            } catch (NumberFormatException e) {
+                System.out.println("Invalid price. Please enter a valid number.");
+            }
+        }
         
-        String symbol = weaponType + "|" + skinName;
-        long timestamp = System.currentTimeMillis() / 1000;
-        String wear = getWearCategory(floatValue);
+        // Validate with Steam API before saving
+        System.out.println("Validating skin with Steam API...");
+        boolean skinExists = steamApiClient.validateSkinExists(weaponType, skinName, condition, isStatTrak);
         
-        CSGOSkinData skinData = new CSGOSkinData(symbol, price, timestamp,
-            weaponType, skinName, condition, isStatTrak, rarity, wear, floatValue);
+        if (skinExists) {
+            String symbol = weaponType + "|" + skinName;
+            long timestamp = System.currentTimeMillis() / 1000;
+            String wear = getWearCategory(floatValue);
             
-        repository.saveSkinData(skinData);
-        System.out.println("Skin data saved successfully!");
+            CSGOSkinData skinData = new CSGOSkinData(symbol, price, timestamp,
+                weaponType, skinName, condition, isStatTrak, rarity, wear, floatValue);
+                
+            repository.saveSkinData(skinData);
+            System.out.println("Skin data saved successfully!");
+        } else {
+            System.out.println("Error: This skin does not exist according to the Steam Market API.");
+            System.out.println("Please verify the weapon type, skin name, and condition, then try again.");
+        }
     }
     
     private static void viewAllSkins() throws Exception {
