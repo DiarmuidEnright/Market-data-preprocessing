@@ -11,6 +11,7 @@ import java.nio.charset.StandardCharsets;
  * Client for interacting with Steam API to validate CSGO skin information
  */
 public class SteamAPIClient {
+    // this is not going to show items that are not listed on the marketplace, in the future use float.db
     private static final String STEAM_MARKET_API_BASE = "https://steamcommunity.com/market/search/render/?query=";
     private static final String STEAM_MARKET_PARAMS = "&appid=730&norender=1"; // 730 is the app ID for CSGO
     
