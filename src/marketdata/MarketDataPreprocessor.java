@@ -1,6 +1,7 @@
 package marketdata;
 import java.util.ArrayList;
 import java.util.List;
+
 public class MarketDataPreprocessor {
     public List<MarketData> preprocess(String rawData) {
         List<MarketData> list = new ArrayList<>();
@@ -21,9 +22,5 @@ public class MarketDataPreprocessor {
             }
         }
         return list;
-    }
-    public static void main(String[] args) {
-        MarketDataPreprocessor preprocessor = new MarketDataPreprocessor();
-        System.out.println("Preprocessing complete.");
     }
 }

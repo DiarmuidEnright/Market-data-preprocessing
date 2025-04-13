@@ -6,10 +6,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 public class MarketDataTransformer {
-    public static void main(String[] args) {
-        MarketDataTransformer transformer = new MarketDataTransformer();
-        System.out.println("Transformation complete.");
-    }
     public Map<String, List<Double>> getMovingAverage(List<MarketData> data, int window) {
         Map<String, List<MarketData>> grouped = new HashMap<>();
         for (MarketData md : data) {

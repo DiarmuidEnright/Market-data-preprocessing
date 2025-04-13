@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
+
 public class MarketDataCleaner {
     public List<MarketData> removeDuplicates(List<MarketData> data) {
         Set<String> seen = new HashSet<>();
@@ -18,9 +19,11 @@ public class MarketDataCleaner {
         }
         return cleaned;
     }
+    
     public List<MarketData> filterInvalidEntries(List<MarketData> data) {
         return data.stream().filter(md -> md.getPrice() > 0).collect(Collectors.toList());
     }
+    
     public List<MarketData> filterOutliers(List<MarketData> data, double threshold) {
         Map<String, List<MarketData>> groups = data.stream().collect(Collectors.groupingBy(MarketData::getSymbol));
         List<MarketData> result = new ArrayList<>();
@@ -35,15 +38,11 @@ public class MarketDataCleaner {
         }
         return result;
     }
+    
     public List<MarketData> cleanData(List<MarketData> data) {
         List<MarketData> cleaned = removeDuplicates(data);
         cleaned = filterInvalidEntries(cleaned);
         cleaned = filterOutliers(cleaned, 2.0);
         return cleaned;
-    }
-    public static void main(String[] args) {
-        MarketDataCleaner cleaner = new MarketDataCleaner();
-        // For demonstration, we create an empty list as no data parsing is defined.
-        System.out.println("Cleaned data count: " + cleaner.cleanData(new ArrayList<>()).size());
     }
 }

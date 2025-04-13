@@ -3,11 +3,14 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
+
 public class AdvancedMarketDataCleaner {
     private MarketDataCleaner baseCleaner;
+    
     public AdvancedMarketDataCleaner(){
         baseCleaner = new MarketDataCleaner();
     }
+    
     public List<MarketData> fullCleanData(List<MarketData> data){
         //cleaning the data using the functions we defined earlier
         data = imputeMissingValues(data);
@@ -20,6 +23,7 @@ public class AdvancedMarketDataCleaner {
         // might add some regex in the future to make sure the returned data is in the correct format
         return data;
     }
+    
     public List<MarketData> imputeMissingValues(List<MarketData> data){
         Map<String, Double> avgMap = data.stream()
             .filter(md -> md.getPrice() > 0 && md.getSymbol() != null && !md.getSymbol().isEmpty())
@@ -39,6 +43,7 @@ public class AdvancedMarketDataCleaner {
         }
         return data;
     }
+    
     public List<MarketData> standardizeData(List<MarketData> data){
         for(MarketData m : data){
             //cleaning the ticket a bit and normalizing it for consistency in the return statement
@@ -48,10 +53,12 @@ public class AdvancedMarketDataCleaner {
         }
         return data;
     }
+    
     public List<MarketData> alignTime(List<MarketData> data){
         data.sort((a, b) -> Long.compare(a.getTimestamp(), b.getTimestamp()));
         return data;
     }
+    
     public List<MarketData> detectAnomalies(List<MarketData> data, double zThreshold){
         Map<String, List<MarketData>> groups = data.stream().collect(Collectors.groupingBy(MarketData::getSymbol));
         List<MarketData> anomalies = new ArrayList<>();
@@ -69,27 +76,5 @@ public class AdvancedMarketDataCleaner {
             }
         }
         return anomalies;
-    }
-    public static void main(String[] args){
-        if(args.length < 2){
-            System.out.println("Usage: java AdvancedMarketDataCleaner <rawDataFilePath> <outputDirectory>");
-            return;
-        }
-        String rawData = "";
-        try{
-            rawData = new String(java.nio.file.Files.readAllBytes(java.nio.file.Paths.get(args[0])));
-        }catch(Exception e){
-            //some basic error catching for the file stream
-            System.out.println("Error reading file");
-            return;
-        }
-        //cleaning and preprossing calls 
-        MarketDataPreprocessor preprocessor = new MarketDataPreprocessor();
-        List<MarketData> data = preprocessor.preprocess(rawData);
-        AdvancedMarketDataCleaner cleaner = new AdvancedMarketDataCleaner();
-        List<MarketData> cleaned = cleaner.fullCleanData(data);
-        List<MarketData> anomalies = cleaner.detectAnomalies(cleaned, 3.0);
-        System.out.println("Cleaned data count: " + cleaned.size());
-        System.out.println("Anomaly count: " + anomalies.size());
     }
 }
