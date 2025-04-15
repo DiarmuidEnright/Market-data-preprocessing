@@ -3,7 +3,7 @@ package marketdata;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
-//random commit counter = 5
+//random commit counter = 6
 public class CSGOSkinRepository {
     private Connection connection;
     private String dbPath;
