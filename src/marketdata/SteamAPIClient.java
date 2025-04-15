@@ -57,10 +57,24 @@ public class SteamAPIClient {
                 
                 // Check if the response contains results
                 String jsonResponse = response.toString();
+                
+                // More robust validation - check for total_count > 0 AND exact name match
                 boolean hasResults = jsonResponse.contains("\"total_count\":") && 
                                     !jsonResponse.contains("\"total_count\":0");
                 
-                return hasResults;
+                // Only if we have results, verify it's the exact skin we're looking for
+                if (hasResults) {
+                    // Extract the descriptions to ensure we have an exact match
+                    String exactMatch = "\"name\":\"" + weaponType + " | " + skinName + " (" + condition + ")\"";
+                    String exactMatchStatTrak = "\"name\":\"StatTrak\\u2122 " + weaponType + " | " + skinName + " (" + condition + ")\"";
+                    
+                    boolean isExactMatch = jsonResponse.contains(exactMatch) || 
+                                          (isStatTrak && jsonResponse.contains(exactMatchStatTrak));
+                    
+                    return isExactMatch;
+                }
+                
+                return false;
             } else {
                 System.out.println("Error connecting to Steam API: HTTP " + responseCode);
                 return false;

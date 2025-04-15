@@ -7,9 +7,12 @@ import java.util.List;
 public class CSGOSkinRepository {
     private Connection connection;
     private String dbPath;
+    private SkinValidationService validationService;
+
     //setting the path to the db
     public CSGOSkinRepository(String dbPath) {
         this.dbPath = dbPath;
+        this.validationService = new SkinValidationService();
     }
     
     public void initialize() throws Exception {
@@ -43,7 +46,21 @@ public class CSGOSkinRepository {
         }
     }
     
-    public void saveSkinData(CSGOSkinData skin) throws Exception {
+    public boolean saveSkinData(CSGOSkinData skin) throws Exception {
+        // Validate the skin using both Steam API and Float DB API before saving
+        boolean isValidSkin = validationService.validateSkin(
+            skin.getWeaponType(), 
+            skin.getSkinName(), 
+            skin.getCondition(), 
+            skin.isStatTrak()
+        );
+        
+        if (!isValidSkin) {
+            System.out.println("Skin validation failed, not saving to database: " + 
+                              skin.getWeaponType() + " | " + skin.getSkinName());
+            return false;
+        }
+        
         String sql = "INSERT OR REPLACE INTO csgo_skins (symbol, price, timestamp, weapon_type, skin_name, condition, is_stattrak, rarity, wear, float_value) " +
                     "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
         //for the user input run the methods depending on the input as like before with the market data
@@ -60,6 +77,8 @@ public class CSGOSkinRepository {
             pstmt.setDouble(10, skin.getFloatValue());
             
             pstmt.executeUpdate();
+            System.out.println("Skin saved successfully: " + skin.getWeaponType() + " | " + skin.getSkinName());
+            return true;
         }
     }
     

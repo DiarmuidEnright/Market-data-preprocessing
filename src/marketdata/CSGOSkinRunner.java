@@ -8,7 +8,7 @@ public class CSGOSkinRunner {
     private static final String DB_PATH = "marketdata.db";
     private static CSGOSkinRepository repository;
     private static Scanner scanner;
-    private static SteamAPIClient steamApiClient;
+    private static SkinValidationService validationService;
 
     public static void main(String[] args) {
         try {
@@ -16,7 +16,7 @@ public class CSGOSkinRunner {
             repository = new CSGOSkinRepository(DB_PATH);
             repository.initialize();
             scanner = new Scanner(System.in);
-            steamApiClient = new SteamAPIClient();
+            validationService = new SkinValidationService();
             
             while (true) {
                 displayMenu();
@@ -132,9 +132,9 @@ public class CSGOSkinRunner {
             }
         }
         
-        // Validate with Steam API before saving
-        System.out.println("Validating skin with Steam API...");
-        boolean skinExists = steamApiClient.validateSkinExists(weaponType, skinName, condition, isStatTrak);
+        // Validate with both Steam API and Float DB API before saving
+        System.out.println("\nValidating skin with Steam API and Float DB API...");
+        boolean skinExists = validationService.validateSkin(weaponType, skinName, condition, isStatTrak);
         
         if (skinExists) {
             String symbol = weaponType + "|" + skinName;
@@ -144,10 +144,14 @@ public class CSGOSkinRunner {
             CSGOSkinData skinData = new CSGOSkinData(symbol, price, timestamp,
                 weaponType, skinName, condition, isStatTrak, rarity, wear, floatValue);
                 
-            repository.saveSkinData(skinData);
-            System.out.println("Skin data saved successfully!");
+            boolean saved = repository.saveSkinData(skinData);
+            if (saved) {
+                System.out.println("Skin data saved successfully!");
+            } else {
+                System.out.println("Failed to save skin data. The skin may have been validated but not saved.");
+            }
         } else {
-            System.out.println("Error: This skin does not exist according to the Steam Market API.");
+            System.out.println("Error: This skin could not be validated through our API services.");
             System.out.println("Please verify the weapon type, skin name, and condition, then try again.");
         }
     }

@@ -1,7 +1,9 @@
-package marketdata;
+package marketdata.backup.samples;
 
 import java.util.ArrayList;
 import java.util.List;
+import marketdata.CSGOSkinData;
+import marketdata.CSGOSkinRepository;
 
 public class SampleCSGOData {
     public static void main(String[] args) {
@@ -12,7 +14,7 @@ public class SampleCSGOData {
             long baseTimestamp = System.currentTimeMillis() / 1000;
             List<CSGOSkinData> sampleData = new ArrayList<>();
             
-            // Add popular AWP skins
+            // AWP skins
             sampleData.add(new CSGOSkinData(
                 "AWP|Dragon Lore", 10500.00, baseTimestamp,
                 "AWP", "Dragon Lore", "Factory New",
@@ -25,7 +27,7 @@ public class SampleCSGOData {
                 true, "Covert", "Field-Tested", 0.25
             ));
             
-            // Add AK-47 skins
+            // AK-47 skins
             sampleData.add(new CSGOSkinData(
                 "AK-47|Wild Lotus", 4800.00, baseTimestamp + 120,
                 "AK-47", "Wild Lotus", "Minimal Wear",
@@ -38,7 +40,7 @@ public class SampleCSGOData {
                 true, "Classified", "Field-Tested", 0.22
             ));
             
-            // Add M4A4 skins
+            // M4A4 skins
             sampleData.add(new CSGOSkinData(
                 "M4A4|Howl", 3200.00, baseTimestamp + 240,
                 "M4A4", "Howl", "Factory New",
@@ -51,7 +53,7 @@ public class SampleCSGOData {
                 false, "Covert", "Minimal Wear", 0.11
             ));
             
-            // Add knife skins
+            // Knives
             sampleData.add(new CSGOSkinData(
                 "Butterfly Knife|Doppler", 1250.00, baseTimestamp + 360,
                 "Butterfly Knife", "Doppler", "Factory New",
@@ -64,7 +66,7 @@ public class SampleCSGOData {
                 false, "Covert", "Factory New", 0.02
             ));
             
-            // Add some cheaper skins
+            // Pistols
             sampleData.add(new CSGOSkinData(
                 "USP-S|Kill Confirmed", 28.50, baseTimestamp + 480,
                 "USP-S", "Kill Confirmed", "Well-Worn",
@@ -77,7 +79,7 @@ public class SampleCSGOData {
                 false, "Restricted", "Factory New", 0.01
             ));
             
-            // Save all sample data
+            // Save data to database
             for (CSGOSkinData skin : sampleData) {
                 repository.saveSkinData(skin);
             }
